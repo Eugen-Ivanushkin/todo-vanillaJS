@@ -2,9 +2,10 @@ const mainDiv = document.querySelector('.main');
 const input = document.querySelector('input[type  = text]');
 const addButton = document.querySelector('button[type  = button]');
 
+/**********STORE***********/
 const store = [];
 
-//counter
+/********COUNTER**********/
 function counter(){
   let count = 0;
 
@@ -40,39 +41,93 @@ function ListItemModel (text){
 function createTask(text){
   const newTask = new ListItemModel(text);
   store.push(newTask);
+
   return newTask;
 };
 
 //delete
 function deleteTask (id){
+  const index = findIdx(id);
+  const deleteEl = store.splice(index, 1);
 
+  return deleteEl;
+};
+
+//udate
+function updateTask (id, text){
+  const index = findIdx(id);
+  const  modifyTask = store.splice(index, 1)[0];
+  modifyTask.text = text;
+  store.splice(index, 0, modifyTask);
+
+  return modifyTask;
+};
+
+function isDone(id){
+  const index = findIdx(id);
+  const  updateStatus = store.splice(index, 1)[0];
+
+  if(updateStatus.status){
+    updateStatus.status = false
+  } else {
+    updateStatus.status = true;
+  };
+  
+  store.splice(index, 0, updateStatus);
+};
+
+
+//findIndex
+function findIdx(id){
+
+  const index = store.findIndex(item => item.id === id);
+
+  return index;
 }
 
 //render
 function render(){
+
   if(mainDiv.children[3] !== undefined){
     mainDiv.children[3].remove();
   };
-  
+
   const ul = document.createElement('ul');
+  ul.addEventListener('click', function(e){
+    const id = e.target.parentElement.id;
+  
+    if(e.target.getAttribute('class') === 'item-delete-button'){
+      deleteTask(id);
+      render();
+    };
+
+    // if(e.target.getAttribute('class') === 'item-isDone-button'){
+      // e.target.parentElement.children[1].setAttribute('class', 'isDone')
+    //   render();
+    // };
+
+  });
+  
   store.forEach(item =>{
 
     const li = document.createElement('li');
     li.setAttribute('id', item.id);
-    li.setAttribute('class', 'list-item')
+    li.setAttribute('class', 'list-item');
 
     const isDoneButton = document.createElement('button');
     isDoneButton.innerText = 'isDone';
+    isDoneButton.setAttribute('class', 'item-isDone-button');
 
     const deleteButton = document.createElement('button');
     deleteButton.innerText = 'delete';
+    deleteButton.setAttribute('class', 'item-delete-button');
 
     const p = document.createElement('p');
     p.innerText = item.text;
     li.appendChild(isDoneButton);
     li.appendChild(p);
     li.appendChild(deleteButton);
-    ul.appendChild(li)
+    ul.appendChild(li);
   });
 
   mainDiv.appendChild(ul);
@@ -85,3 +140,16 @@ addButton.addEventListener('click', function(){
   input.value = ''
   render();
 });
+
+createTask('someTask1');
+createTask('someTask2');
+createTask('someTask3');
+
+// deleteTask(1);
+// updateTask (3, 'some update task')
+// isDone(3);
+
+render();
+
+
+// console.log('store: ', store);
