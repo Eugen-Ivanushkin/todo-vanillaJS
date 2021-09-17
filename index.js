@@ -104,7 +104,11 @@ function render(){
       render();
     };
 
-    if(e.target.getAttribute('class') === 'item-isDone-button'){
+    if(e.target.getAttribute('class') === 'text'){
+      isDone(id);
+      render();
+    } 
+    else if(e.target.getAttribute('class') === 'text isDone'){
       isDone(id);
       render();
     }
@@ -116,28 +120,25 @@ function render(){
     li.setAttribute('id', item.id);
     li.setAttribute('class', 'list-item');
 
-    const isDoneButton = document.createElement('button');
-    isDoneButton.innerText = 'isDone';
-    isDoneButton.setAttribute('class', 'item-isDone-button');
-
     const deleteButton = document.createElement('button');
     deleteButton.innerText = 'delete';
     deleteButton.setAttribute('class', 'item-delete-button');
 
     const p = document.createElement('p');
     p.innerText = item.text;
+    p.classList.add('text');
     item.status?
       p.classList.add('isDone')
     :
       p.classList.remove('isDone');
 
-    li.appendChild(isDoneButton);
     li.appendChild(p);
     li.appendChild(deleteButton);
     ul.appendChild(li);
   });
 
   mainDiv.appendChild(ul);
+  
 };
 
 addButton.addEventListener('click', function(){
@@ -160,3 +161,35 @@ render();
 
 
 // console.log('store: ', store);
+
+
+
+
+
+
+//Дабл клик - изменить текст задачи
+
+// var waitingForClick = false;
+
+// function theClick(ev) {
+//     switch (ev.detail) {
+//     case 1: // первый клик
+//         waitingForClick = setTimeout(function() {
+//             console.log("Hi"); 
+//         }, 500);
+//         break;
+//     default: // больше чем один клик
+//         if (waitingForClick) { // отменить ждущий клик
+//             clearTimeout(waitingForClick);
+//             waitingForClick = false;
+//         }
+//         console.log("Bye");
+//         break;
+//     }
+// }
+
+// document.querySelector("div").addEventListener('click', theClick, false);
+
+//Один - добавить статус выполнения
+//Добавить стили
+//Добавить кнопку удалить выполненые
