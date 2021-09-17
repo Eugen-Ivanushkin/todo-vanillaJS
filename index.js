@@ -25,7 +25,7 @@ function checkText (text){
   };
   if(text.trim().length === 0){
     throw new Error('The name of task cannot be empty');
-  }
+  };
 };
 
 //Item list Model
@@ -54,18 +54,19 @@ function deleteTask (id){
 };
 
 //udate
-function updateTask (id, text){
-  const index = findIdx(id);
-  const  modifyTask = store.splice(index, 1)[0];
-  modifyTask.text = text;
-  store.splice(index, 0, modifyTask);
+// function updateTask (id, text){
+//   const index = findIdx(id);
+//   const  modifyTask = store.splice(index, 1)[0];
+//   modifyTask.text = text;
+//   store.splice(index, 0, modifyTask);
 
-  return modifyTask;
-};
+//   return modifyTask;
+// };
 
 function isDone(id){
   const index = findIdx(id);
   const  updateStatus = store.splice(index, 1)[0];
+
 
   if(updateStatus.status){
     updateStatus.status = false
@@ -74,13 +75,14 @@ function isDone(id){
   };
   
   store.splice(index, 0, updateStatus);
-};
 
+  return updateStatus.status;
+};
 
 //findIndex
 function findIdx(id){
 
-  const index = store.findIndex(item => item.id === id);
+  const index = store.findIndex(item => item.id === +id);
 
   return index;
 }
@@ -95,17 +97,17 @@ function render(){
   const ul = document.createElement('ul');
   ul.addEventListener('click', function(e){
     const id = e.target.parentElement.id;
+    console.log(id);
   
     if(e.target.getAttribute('class') === 'item-delete-button'){
       deleteTask(id);
       render();
     };
 
-    // if(e.target.getAttribute('class') === 'item-isDone-button'){
-      // e.target.parentElement.children[1].setAttribute('class', 'isDone')
-    //   render();
-    // };
-
+    if(e.target.getAttribute('class') === 'item-isDone-button'){
+      isDone(id);
+      render();
+    }
   });
   
   store.forEach(item =>{
@@ -124,6 +126,11 @@ function render(){
 
     const p = document.createElement('p');
     p.innerText = item.text;
+    item.status?
+      p.classList.add('isDone')
+    :
+      p.classList.remove('isDone');
+
     li.appendChild(isDoneButton);
     li.appendChild(p);
     li.appendChild(deleteButton);
