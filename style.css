@@ -75,3 +75,11 @@ p {
   outline: 0;
   outline-offset: 0;
 }
+
+.delete-complited {
+  height: 30px;
+  border: 2px solid gray;
+  background: lightgray;
+  border-radius: 4px;
+  font-size: 20px;
+}

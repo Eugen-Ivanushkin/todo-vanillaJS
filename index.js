@@ -2,6 +2,7 @@ const mainDiv = document.querySelector('.main');
 const input = document.querySelector('#input');
 const addButton = document.querySelector('#add');
 const ul = document.querySelector('#todo_list');
+const deleteCompletedBtn = document.querySelector('.delete-complited')
 
 /***************LISTENERS****************/
 
@@ -29,6 +30,11 @@ const ul = document.querySelector('#todo_list');
   render();
 });
 
+// deleteCompletedBtn.addEventListener('click', function(){
+//   isDoneDelete();
+//   render();
+// })
+
 //Double-click
 let waitingForClick = false;
 
@@ -51,7 +57,7 @@ function theClick(e) {
         const textEl = e.target;
         inputChangeText.value = e.target.textContent;
         textEl.parentElement.prepend(inputChangeText);
-        textEl.innerHTML = "";
+        textEl.textContent = "";
         inputChangeText.focus();
         inputChangeText.onblur = function(){
           textEl.textContent = inputChangeText.value;
@@ -144,6 +150,14 @@ function findIdx(id){
   return index;
 };
 
+// function isDoneDelete (){
+//   store.forEach((item, index) => {
+//     if(item.status){
+//       store.splice(index, 1);
+//     }
+//   });
+// };
+
 //render
 function render(){
   ul.innerHTML = '';
@@ -176,6 +190,7 @@ function render(){
 createTask('someTask1');
 createTask('someTask2');
 createTask('someTask3');
+
 
 render();
 
