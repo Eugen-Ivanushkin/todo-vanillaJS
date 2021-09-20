@@ -47,6 +47,7 @@ function theClick(e) {
             waitingForClick = false;
         }
         const inputChangeText = document.createElement('input');
+        inputChangeText.classList.add('change_input');
         const textEl = e.target;
         inputChangeText.value = e.target.textContent;
         textEl.parentElement.prepend(inputChangeText);
@@ -151,11 +152,11 @@ function render(){
 
     const li = document.createElement('li');
     li.setAttribute('id', item.id);
-    li.setAttribute('class', 'list-item');
+    li.classList.add('list-item');
 
     const deleteButton = document.createElement('button');
     deleteButton.innerText = 'delete';
-    deleteButton.setAttribute('class', 'item-delete-button');
+    deleteButton.classList.add('item-delete-button');
 
     const p = document.createElement('p');
     p.innerText = item.text;
@@ -177,9 +178,5 @@ createTask('someTask2');
 createTask('someTask3');
 
 render();
-
-//Использовать classlist
-
-//Добавить стили
 
 //Переделать под реакт с <div id="root">

@@ -10,15 +10,37 @@ body {
   flex-direction: column;
   align-content: center;
   justify-content: center;
+
+  padding: 100px 0;
+
+  background: rgb(236, 233, 233);
 }
 
 h1 {
+  font-size: 80px;
+  font-style: italic;
   text-align: center;
+  color: gray;
 }
 
 .main {
   display: inline-block;
   margin: 0 auto;
+}
+
+.main input {
+  margin-top: 20px;
+  height: 30px;
+  font-size: 20px;
+}
+
+#add {
+  height: 30px;
+  width: 60px;
+  border: 2px solid gray;
+  background: lightgray;
+  border-radius: 4px;
+  font-size: 20px;
 }
 
 .list-item {
@@ -27,8 +49,18 @@ h1 {
   padding: 5px;
 
   border: 2px solid gray;
+  background:indianred;
   border-radius: 10px;
   margin: 10px 0;
+
+  font-size: 20px;
+}
+
+.list-item button {
+  font-size: 20px;
+  border: 1px solid indianred;
+  background: lightgray;
+  border-radius: 4px;
 }
 
 p {
@@ -37,4 +69,9 @@ p {
 
 .isDone {
   text-decoration: line-through;
+}
+
+.change_input {
+  outline: 0;
+  outline-offset: 0;
 }
