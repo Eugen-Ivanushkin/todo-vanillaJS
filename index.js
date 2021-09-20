@@ -47,9 +47,18 @@ function theClick(e) {
             waitingForClick = false;
         }
         const inputChangeText = document.createElement('input');
-        inputChangeText.value = e.target
+        const textEl = e.target;
+        inputChangeText.value = e.target.textContent;
+        textEl.parentElement.prepend(inputChangeText);
+        textEl.innerHTML = "";
+        inputChangeText.focus();
+        inputChangeText.onblur = function(){
+          textEl.textContent = inputChangeText.value;
+          inputChangeText.remove();
+          updateTask(id, textEl.textContent);
+          render();
+        };
 
-        console.log("change text");
         break;
     };
 };
@@ -106,14 +115,14 @@ function deleteTask (id){
 };
 
 //udate
-// function updateTask (id, text){
-//   const index = findIdx(id);
-//   const  modifyTask = store.splice(index, 1)[0];
-//   modifyTask.text = text;
-//   store.splice(index, 0, modifyTask);
+function updateTask (id, text){
+  const index = findIdx(id);
+  const  modifyTask = store.splice(index, 1)[0];
+  modifyTask.text = text;
+  store.splice(index, 0, modifyTask);
 
-//   return modifyTask;
-// };
+  return modifyTask;
+};
 
 function isDone(id){
   const index = findIdx(id);
@@ -168,11 +177,6 @@ createTask('someTask2');
 createTask('someTask3');
 
 render();
-
-
-
-//Дабл клик - изменить текст задачи
-
 
 //Использовать classlist
 
