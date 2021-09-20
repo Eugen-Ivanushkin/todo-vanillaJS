@@ -1,6 +1,58 @@
 const mainDiv = document.querySelector('.main');
-const input = document.querySelector('input[type  = text]');
-const addButton = document.querySelector('button[type  = button]');
+const input = document.querySelector('#input');
+const addButton = document.querySelector('#add');
+const ul = document.querySelector('#todo_list');
+
+/***************LISTENERS****************/
+
+  ul.addEventListener('click', function(e){
+    const id = +e.target.parentElement.id;
+  
+    if(e.target.getAttribute('class') === 'item-delete-button'){
+      deleteTask(id);
+      render();
+    };
+
+    if(e.target.getAttribute('class') === 'text'){
+      theClick(e);
+    } 
+    else if(e.target.getAttribute('class') === 'text isDone'){
+      theClick(e);
+    }
+  });
+
+  addButton.addEventListener('click', function(){
+  const taskText = input.value;
+  checkText(taskText);
+  createTask(taskText);
+  input.value = '';
+  render();
+});
+
+//Double-click
+let waitingForClick = false;
+
+function theClick(e) {
+  const id = +e.target.parentElement.id;
+    switch (e.detail) {
+    case 1: // first click
+        waitingForClick = setTimeout(function() {
+          isDone(id);
+          render();
+        }, 250);
+        break;
+    default: // more click
+        if (waitingForClick) { // remove click
+            clearTimeout(waitingForClick);
+            waitingForClick = false;
+        }
+        const inputChangeText = document.createElement('input');
+        inputChangeText.value = e.target
+
+        console.log("change text");
+        break;
+    };
+};
 
 /**********STORE***********/
 const store = [];
@@ -18,7 +70,7 @@ function counter(){
 
 const id = counter();
 
-//text validation
+//Text validation
 function checkText (text){
   if(typeof text !== 'string'){
     throw new Error('The name of task must be string type');
@@ -28,7 +80,7 @@ function checkText (text){
   };
 };
 
-//Item list Model
+//Item list model
 function ListItemModel (text){
   checkText (text);
 
@@ -67,12 +119,7 @@ function isDone(id){
   const index = findIdx(id);
   const  updateStatus = store.splice(index, 1)[0];
 
-
-  if(updateStatus.status){
-    updateStatus.status = false
-  } else {
-    updateStatus.status = true;
-  };
+  updateStatus.status = !updateStatus.status
   
   store.splice(index, 0, updateStatus);
 
@@ -85,34 +132,11 @@ function findIdx(id){
   const index = store.findIndex(item => item.id === +id);
 
   return index;
-}
+};
 
 //render
 function render(){
-
-  if(mainDiv.children[3] !== undefined){
-    mainDiv.children[3].remove();
-  };
-
-  const ul = document.createElement('ul');
-  ul.addEventListener('click', function(e){
-    const id = e.target.parentElement.id;
-    console.log(id);
-  
-    if(e.target.getAttribute('class') === 'item-delete-button'){
-      deleteTask(id);
-      render();
-    };
-
-    if(e.target.getAttribute('class') === 'text'){
-      isDone(id);
-      render();
-    } 
-    else if(e.target.getAttribute('class') === 'text isDone'){
-      isDone(id);
-      render();
-    }
-  });
+  ul.innerHTML = '';
   
   store.forEach(item =>{
 
@@ -136,60 +160,22 @@ function render(){
     li.appendChild(deleteButton);
     ul.appendChild(li);
   });
-
-  mainDiv.appendChild(ul);
   
 };
-
-addButton.addEventListener('click', function(){
-  const taskText = input.value;
-  checkText(taskText);
-  createTask(taskText);
-  input.value = ''
-  render();
-});
 
 createTask('someTask1');
 createTask('someTask2');
 createTask('someTask3');
 
-// deleteTask(1);
-// updateTask (3, 'some update task')
-// isDone(3);
-
 render();
-
-
-// console.log('store: ', store);
-
-
-
 
 
 
 //Дабл клик - изменить текст задачи
 
-// var waitingForClick = false;
 
-// function theClick(ev) {
-//     switch (ev.detail) {
-//     case 1: // первый клик
-//         waitingForClick = setTimeout(function() {
-//             console.log("Hi"); 
-//         }, 500);
-//         break;
-//     default: // больше чем один клик
-//         if (waitingForClick) { // отменить ждущий клик
-//             clearTimeout(waitingForClick);
-//             waitingForClick = false;
-//         }
-//         console.log("Bye");
-//         break;
-//     }
-// }
+//Использовать classlist
 
-// document.querySelector("div").addEventListener('click', theClick, false);
-
-//Один - добавить статус выполнения
 //Добавить стили
-//Добавить кнопку удалить выполненые
+
+//Переделать под реакт с <div id="root">
