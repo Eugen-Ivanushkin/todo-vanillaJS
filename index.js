@@ -1,50 +1,120 @@
-const mainDiv = document.querySelector('.main');
-const input = document.querySelector('#input');
-const addButton = document.querySelector('#add');
-const ul = document.querySelector('#todo_list');
-const deleteCompletedBtn = document.querySelector('.delete-complited')
+const mainDiv = document.querySelector('.root');
+
+const titleToDo = document.createElement('h1');
+titleToDo.textContent = 'Todolist';
+
+const input = document.createElement('input');
+input.setAttribute('id', 'input');
+input.setAttribute('type', 'text');
+input.setAttribute('placeholder', 'What need to be done?');
+
+const addBtn = document.createElement('button');
+addBtn.setAttribute('id', 'add');
+addBtn.setAttribute('type', 'button');
+addBtn.textContent = 'Add';
+
+const todoListEl = document.createElement('ul');
+todoListEl.setAttribute('id', 'todo_list');
+
+const buttonsActionWrapper = document.createElement('div');
+buttonsActionWrapper.setAttribute('id', 'button_group');
+buttonsActionWrapper.classList.add('button_group');
+
+const showAllBtn = document.createElement('button');
+showAllBtn.classList.add('group-btn', 'show-all-btn');
+showAllBtn.textContent = 'All';
+
+const showActiveBtn = document.createElement('button');
+showActiveBtn.classList.add('group-btn', 'show-activ-btn');
+showActiveBtn.textContent = 'Active';
+
+const showCompletedBtn = document.createElement('button');
+showCompletedBtn.classList.add('group-btn', 'show-complited-btn');
+showCompletedBtn.textContent = 'Complited';
+
+const clearCompletedBtn = document.createElement('button');
+clearCompletedBtn.classList.add('group-btn', 'delete-complited');
+clearCompletedBtn.textContent = 'Clear complited';
+
+buttonsActionWrapper.append(
+  showAllBtn, 
+  showActiveBtn, 
+  showCompletedBtn, 
+  showCompletedBtn, 
+  clearCompletedBtn
+  );
+
+mainDiv.append(
+  titleToDo,
+  input,
+  addBtn,
+  todoListEl,
+  buttonsActionWrapper
+  );
 
 /***************LISTENERS****************/
 
-  ul.addEventListener('click', function(e){
+todoListEl.addEventListener('click', function(e){
     const id = +e.target.parentElement.id;
   
-    if(e.target.getAttribute('class') === 'item-delete-button'){
+    if(e.target.classList.contains('item-delete-button')){
       deleteTask(id);
-      render();
-    };
-
-    if(e.target.getAttribute('class') === 'text'){
-      theClick(e);
-    } 
-    else if(e.target.getAttribute('class') === 'text isDone'){
+      render(store);
+    }
+    else if(e.target.classList.contains('list-item')){
       theClick(e);
     }
+    else if(e.target.classList.contains('text')){
+      theClick(e);
+    };
+
   });
 
-  addButton.addEventListener('click', function(){
+  addBtn.addEventListener('click', function(){
   const taskText = input.value;
   checkText(taskText);
   createTask(taskText);
   input.value = '';
-  render();
+  render(store);
 });
 
-// deleteCompletedBtn.addEventListener('click', function(){
-//   isDoneDelete();
-//   render();
-// })
+buttonsActionWrapper.addEventListener('click', function(e){
+  if(e.target.classList.contains('show-all-btn')){
+    render(store);
+  };
+
+  if(e.target.classList.contains('show-activ-btn')){
+    render(store.filter(item => item.status === false));
+  };
+
+  if(e.target.classList.contains('show-complited-btn')){
+    render(store.filter(item => item.status === true));
+  };
+
+  if(e.target.classList.contains('delete-complited')){
+    isDoneDelete();
+    render(store);
+  };
+});
 
 //Double-click
 let waitingForClick = false;
 
 function theClick(e) {
-  const id = +e.target.parentElement.id;
+  let id = null;
+  if(e.target.classList.contains('text')){
+    id = +e.target.parentElement.id;
+  } 
+  else if(e.target.classList.contains('list-item')){
+    id = +e.target.id;
+  }
+
+  
     switch (e.detail) {
     case 1: // first click
         waitingForClick = setTimeout(function() {
           isDone(id);
-          render();
+          render(store);
         }, 250);
         break;
     default: // more click
@@ -54,8 +124,16 @@ function theClick(e) {
         }
         const inputChangeText = document.createElement('input');
         inputChangeText.classList.add('change_input');
-        const textEl = e.target;
-        inputChangeText.value = e.target.textContent;
+        let textEl = null;
+
+        if(e.target.classList.contains('text')){
+          textEl = e.target;
+        } 
+        else if(e.target.classList.contains('list-item')){
+          textEl = e.target.children[0];
+        };
+
+        inputChangeText.value = textEl.textContent;
         textEl.parentElement.prepend(inputChangeText);
         textEl.textContent = "";
         inputChangeText.focus();
@@ -63,15 +141,19 @@ function theClick(e) {
           textEl.textContent = inputChangeText.value;
           inputChangeText.remove();
           updateTask(id, textEl.textContent);
-          render();
+          render(store);
         };
 
         break;
     };
 };
 
+function storeIsEmpty (){
+  return store.length <= 0? true : false;
+}
+
 /**********STORE***********/
-const store = [];
+let store = [];
 
 /********COUNTER**********/
 function counter(){
@@ -150,17 +232,17 @@ function findIdx(id){
   return index;
 };
 
-// function isDoneDelete (){
-//   store.forEach((item, index) => {
-//     if(item.status){
-//       store.splice(index, 1);
-//     }
-//   });
-// };
+function isDoneDelete (){
+  store = store.filter(item => item.status === false);
+};
+
+function showAll (){
+
+};
 
 //render
-function render(){
-  ul.innerHTML = '';
+function render(store){
+  todoListEl.innerHTML = '';
   
   store.forEach(item =>{
 
@@ -169,22 +251,22 @@ function render(){
     li.classList.add('list-item');
 
     const deleteButton = document.createElement('button');
-    deleteButton.innerText = 'delete';
+    deleteButton.textContent = 'delete';
     deleteButton.classList.add('item-delete-button');
 
     const p = document.createElement('p');
-    p.innerText = item.text;
+    p.textContent = item.text;
     p.classList.add('text');
     item.status?
       p.classList.add('isDone')
     :
       p.classList.remove('isDone');
 
-    li.appendChild(p);
-    li.appendChild(deleteButton);
-    ul.appendChild(li);
+    li.append(p, deleteButton);
+    todoListEl.appendChild(li);
   });
-  
+
+  storeIsEmpty()? buttonsActionWrapper.remove() : mainDiv.append(buttonsActionWrapper);
 };
 
 createTask('someTask1');
@@ -192,6 +274,4 @@ createTask('someTask2');
 createTask('someTask3');
 
 
-render();
-
-//Переделать под реакт с <div id="root">
+render(store);

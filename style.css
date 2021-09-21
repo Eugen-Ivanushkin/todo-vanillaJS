@@ -23,12 +23,12 @@ h1 {
   color: gray;
 }
 
-.main {
+.root {
   display: inline-block;
   margin: 0 auto;
 }
 
-.main input {
+#input {
   margin-top: 20px;
   height: 30px;
   font-size: 20px;
@@ -56,6 +56,10 @@ h1 {
   font-size: 20px;
 }
 
+.list-item input {
+  font-size: 20px;
+}
+
 .list-item button {
   font-size: 20px;
   border: 1px solid indianred;
@@ -76,10 +80,16 @@ p {
   outline-offset: 0;
 }
 
-.delete-complited {
-  height: 30px;
-  border: 2px solid gray;
+.button_group {
+  display: flex;
+  justify-content: space-between;
+
+  margin-top: 10px;
+}
+
+.group-btn {
+  padding: 2px;
+  border: 1px solid gray;
   background: lightgray;
   border-radius: 4px;
-  font-size: 20px;
 }
