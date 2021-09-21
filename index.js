@@ -79,19 +79,29 @@ todoListEl.addEventListener('click', function(e){
 });
 
 buttonsActionWrapper.addEventListener('click', function(e){
+  if(e.target.classList.contains('button_group')){
+    return;
+  }
+
+  toggleActiveBtn(e);
+
   if(e.target.classList.contains('show-all-btn')){
+    e.target.classList.toggle('active-btn');
     render(store);
   };
 
   if(e.target.classList.contains('show-activ-btn')){
+    e.target.classList.toggle('active-btn');
     render(store.filter(item => item.status === false));
   };
 
   if(e.target.classList.contains('show-complited-btn')){
+    e.target.classList.toggle('active-btn');
     render(store.filter(item => item.status === true));
   };
 
   if(e.target.classList.contains('delete-complited')){
+    e.target.parentElement.children[0].classList.toggle('active-btn');
     isDoneDelete();
     render(store);
   };
@@ -213,6 +223,7 @@ function updateTask (id, text){
   return modifyTask;
 };
 
+//isDone
 function isDone(id){
   const index = findIdx(id);
   const  updateStatus = store.splice(index, 1)[0];
@@ -236,8 +247,11 @@ function isDoneDelete (){
   store = store.filter(item => item.status === false);
 };
 
-function showAll (){
-
+function toggleActiveBtn (e){
+  const buttonCollection = e.currentTarget.children;
+  for(button of buttonCollection){
+    button.classList.remove('active-btn')
+  };
 };
 
 //render

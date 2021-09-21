@@ -93,3 +93,11 @@ p {
   background: lightgray;
   border-radius: 4px;
 }
+
+.group-btn:hover {
+  background: indianred;
+}
+
+.active-btn {
+  background: indianred;
+}
